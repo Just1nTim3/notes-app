@@ -9,6 +9,9 @@ const NoteSchema = new mongoose.Schema({
         type: String,
         required: true
     }
+},
+{
+    versionKey: false
 })
 
 const NotesModel = mongoose.model("Note", NoteSchema)
