@@ -21,28 +21,16 @@ const App = () => {
             id: 2,
             title: "title2",
             content: "content2"
-        },
-        {
-            id: 3,
-            title: "title3",
-            content: "content3"
-        },
-        {
-            id: 4,
-            title: "title4",
-            content: "content4"
-        },
-        {
-            id: 5,
-            title: "title5",
-            content: "content5"
         }
     ])
 
+    //state variables
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
 
-    const handleSubmit = (
+    const [selectedNote, setSelectedNote] = useState<Note | null>(null)
+
+    const handleAddNote = (
         event: React.FormEvent
     ) => {
         event.preventDefault()
@@ -70,7 +58,7 @@ const App = () => {
             {/*form*/}
             <form
                 className="note-form"
-                onSubmit={(event) => handleSubmit(event)}>
+                onSubmit={(event) => handleAddNote(event)}>
                 <input
                     value={title}
                     onChange={(event) =>
@@ -82,7 +70,7 @@ const App = () => {
                     value={content}
                     onChange={(event)=>
                         setContent(event.target.value)}
-                    placeholder="title"
+                    placeholder="content"
                     rows={10}
                     required>
                 </textarea>
