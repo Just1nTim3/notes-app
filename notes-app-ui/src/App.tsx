@@ -1,5 +1,5 @@
 import "./App.css"
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 
 type Note = {
     id: number
@@ -10,51 +10,73 @@ type Note = {
 
 const App = () => {
     //this mocks API call and displays notes on ui
-    const [notes, setNotes] = useState<Note[]>([
-        {
-            id: 1,
-            title: "title1",
-            content: "content1"
-        },
-        {
-            id: 2,
-            title: "title2",
-            content: "content2"
-        }
-    ])
+    const [notes, setNotes] = useState<Note[]>([])
 
     //state variables
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
 
     const [selectedNote, setSelectedNote] = useState<Note | null>(null)
+
+    //
+    useEffect(() => {
+        const fetchNotes = async () => {
+            try {
+                const response = await fetch("http://localhost:5000/api/notes/all")
+
+                const notes: Note[] = await response.json()
+                setNotes(notes)
+            } catch (e) {
+                console.log(e)
+            }
+        }
+
+        fetchNotes()
+        //without [] it runs constantly. [] assures it runs only once
+    }, [])
+
     const handleNoteClick = (note: Note) => {
         setSelectedNote(note)
         setTitle(note.title)
         setContent(note.content)
     }
 
-    const handleUpdateNote = (event: React.FormEvent) => {
+    //FIXME: update crashes app
+    const handleUpdateNote = async (event: React.FormEvent) => {
         event.preventDefault()
 
         if(!selectedNote) {
             return
         }
 
-        const updatedNote: Note = {
-            id: selectedNote.id,
-            title: title,
-            content: content
+        try {
+            const response = await fetch(
+                `http://localhost:5000/api/notes/${selectedNote.id}`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        title,
+                        content
+                    })
+                })
+            const updatedNote = await response.json()
+
+            const updatedNotesList = notes.map((note) =>
+                note.id === selectedNote.id ? updatedNote : note
+            )
+
+            setNotes(updatedNotesList)
+            setTitle("")
+            setContent("")
+            setSelectedNote(null)
+        } catch (e) {
+            console.log(e)
         }
 
-        const updatedNotesList = notes.map((note) =>
-        note.id === selectedNote.id ? updatedNote : note
-        )
 
-        setNotes(updatedNotesList)
-        setTitle("")
-        setContent("")
-        setSelectedNote(null)
     }
 
     const handleCancel = () => {
@@ -63,25 +85,38 @@ const App = () => {
         setSelectedNote(null)
     }
 
-    const handleAddNote = (
+    const handleAddNote = async (
         event: React.FormEvent
     ) => {
         event.preventDefault()
         console.log("title: ", title)
         console.log("content: ", content)
 
-        //we create new note when someone clicks submit
-        const newNote: Note = {
-            id: notes.length + 1,
-            title: title,
-            content: content
+        try {
+            const response = await fetch(
+                "http://localhost:5000/api/notes",
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        title,
+                        content
+                    })
+                })
+            const newNote = await response.json()
+            //we call setNotes function, passing new note and existing notes
+            setNotes([newNote, ...notes])
+            //we clear title and content so after submit form gets cleared
+            setTitle("")
+            setContent("")
+        } catch (e) {
+            console.log(e)
         }
 
-        //we call setNotes function, passing new note and existing notes
-        setNotes([newNote, ...notes])
-        //we clear title and content so after submit form gets cleared
-        setTitle("")
-        setContent("")
+
+
 
     }
 

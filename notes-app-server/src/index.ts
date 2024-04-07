@@ -40,7 +40,7 @@ app.post("/api/notes", async (req, res) => {
     try {
         const note = new NotesModel(req.body)
         if (!note) {
-            res.status(500).send("Body can't be empty")
+            res.status(400).send("Body can't be empty")
         }
         await note.save()
         console.log("saving item: " + note)
