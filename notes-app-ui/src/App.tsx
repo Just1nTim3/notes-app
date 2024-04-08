@@ -2,14 +2,13 @@ import "./App.css"
 import React, {useEffect, useState} from "react";
 
 type Note = {
-    id: number
+    _id: number
     title: string
     content: string
 }
 
 
 const App = () => {
-    //this mocks API call and displays notes on ui
     const [notes, setNotes] = useState<Note[]>([])
 
     //state variables
@@ -18,7 +17,7 @@ const App = () => {
 
     const [selectedNote, setSelectedNote] = useState<Note | null>(null)
 
-    //
+    //used for getting all notes
     useEffect(() => {
         const fetchNotes = async () => {
             try {
@@ -48,12 +47,13 @@ const App = () => {
         if(!selectedNote) {
             return
         }
+        console.log(selectedNote._id)
 
         try {
             const response = await fetch(
-                `http://localhost:5000/api/notes/${selectedNote.id}`,
+                `http://localhost:5000/api/notes/${selectedNote._id}`,
                 {
-                    method: "PATCH",
+                    method: "POST",
                     headers: {
                         "Content-Type": "application/json"
                     },
@@ -64,8 +64,9 @@ const App = () => {
                 })
             const updatedNote = await response.json()
 
+
             const updatedNotesList = notes.map((note) =>
-                note.id === selectedNote.id ? updatedNote : note
+                note._id === selectedNote._id ? updatedNote : note
             )
 
             setNotes(updatedNotesList)
@@ -124,7 +125,7 @@ const App = () => {
         //required when we have nested onClick events
         event.stopPropagation()
 
-        const updateNotes = notes.filter((note) => note.id != noteId)
+        const updateNotes = notes.filter((note) => note._id != noteId)
 
         setNotes(updateNotes)
     }
@@ -174,7 +175,7 @@ const App = () => {
                         onClick={() => handleNoteClick(note)}
                     >
                         <div className="notes-header">
-                            <button onClick={(event) => deleteNote(event, note.id)}>x</button>
+                            <button onClick={(event) => deleteNote(event, note._id)}>x</button>
                         </div>
                         <h2>{note.title}</h2>
                         <p>{note.content}</p>
