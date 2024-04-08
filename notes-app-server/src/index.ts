@@ -52,8 +52,16 @@ app.post("/api/notes", async (req, res) => {
 
 app.patch("/api/notes/:id", async (req, res) => {
     try {
+        console.log("updating note")
         const note = await NotesModel.findByIdAndUpdate(req.params.id, req.body)
-        res.status(200)
+        console.log(note)
+        if (note){
+            console.log("Saving note")
+            await note.save()
+            res.status(200).send(note)
+        } else {
+            res.status(404).send("Not found")
+        }
     } catch (e) {
         res.status(500).send({e})
     }
