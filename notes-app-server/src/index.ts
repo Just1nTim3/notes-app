@@ -85,14 +85,14 @@ app.post("/api/notes/:id", async (req, res) => {
 })
 
 //TODO: fix delete method
-app.delete("api/notes/:id", async (req, res) => {
+app.delete("/api/notes/:id", async (req, res) => {
     try {
         const note = await NotesModel.findByIdAndDelete(req.params.id)
         if(!note){
             return res.status(400).send("Not found")
         }
         console.log("Item deleted: " + note)
-        res.status(204).send()
+        res.status(200).send("ok")
     } catch (e) {
         res.status(500).send({e})
     }
