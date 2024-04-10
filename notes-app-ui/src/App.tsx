@@ -121,13 +121,25 @@ const App = () => {
 
     }
 
-    const deleteNote = (event: React.MouseEvent, noteId: number) => {
+    const deleteNote = async (event: React.MouseEvent, noteId: number) => {
         //required when we have nested onClick events
         event.stopPropagation()
 
-        const updateNotes = notes.filter((note) => note._id != noteId)
+        try {
+            await fetch(
+                `http://localhost:5000/api/notes/${noteId}`,
+                {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                })
+            const updateNotes = notes.filter((note) => note._id != noteId)
 
-        setNotes(updateNotes)
+            setNotes(updateNotes)
+        } catch (e){
+            console.log("Error" + e)
+        }
     }
 
     return(
