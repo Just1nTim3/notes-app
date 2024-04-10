@@ -44,7 +44,7 @@ const App = () => {
     const handleUpdateNote = async (event: React.FormEvent) => {
         event.preventDefault()
 
-        if(!selectedNote) {
+        if (!selectedNote) {
             return
         }
         console.log(selectedNote._id)
@@ -115,10 +115,6 @@ const App = () => {
         } catch (e) {
             console.log(e)
         }
-
-
-
-
     }
 
     const deleteNote = async (event: React.MouseEvent, noteId: number) => {
@@ -137,12 +133,12 @@ const App = () => {
             const updateNotes = notes.filter((note) => note._id != noteId)
 
             setNotes(updateNotes)
-        } catch (e){
+        } catch (e) {
             console.log("Error" + e)
         }
     }
 
-    return(
+    return (
         <div className="app-container">
 
             {/*form*/}
@@ -159,7 +155,7 @@ const App = () => {
                 </input>
                 <textarea
                     value={content}
-                    onChange={(event)=>
+                    onChange={(event) =>
                         setContent(event.target.value)}
                     placeholder="content"
                     rows={10}
@@ -174,9 +170,9 @@ const App = () => {
                         </button>
                     </div>
                 ) : (
-                <button type="submit">
-                    Add Note
-                </button>
+                    <button type="submit">
+                        Add Note
+                    </button>
                 )}
             </form>
 
@@ -184,7 +180,7 @@ const App = () => {
             <div className="notes-grid">
                 {notes.map((note) => (
                     <div className="note-item"
-                        onClick={() => handleNoteClick(note)}
+                         onClick={() => handleNoteClick(note)}
                     >
                         <div className="notes-header">
                             <button onClick={(event) => deleteNote(event, note._id)}>x</button>

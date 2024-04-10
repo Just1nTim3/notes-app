@@ -66,7 +66,7 @@ app.post("/api/notes/:id", async (req, res) => {
 
         const note = await NotesModel.findByIdAndUpdate(req.params.id, req.body)
 
-        if (note){
+        if (note) {
             console.log("old note: " + note)
             note.title = req.body.title
             note.content = req.body.content
@@ -88,7 +88,7 @@ app.post("/api/notes/:id", async (req, res) => {
 app.delete("/api/notes/:id", async (req, res) => {
     try {
         const note = await NotesModel.findByIdAndDelete(req.params.id)
-        if(!note){
+        if (!note) {
             return res.status(400).send("Not found")
         }
         console.log("Item deleted: " + note)
