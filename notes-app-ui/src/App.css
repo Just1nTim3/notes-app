@@ -3,6 +3,13 @@ body {
   background-color: lightgray;
 }
 
+h1 {
+  width:500px;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 100px;
+}
+
 /*this is default so it uses 1 column*/
 .app-container {
   grid-template-columns: 1fr;

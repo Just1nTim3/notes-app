@@ -24,7 +24,8 @@ const App = () => {
                 const response = await fetch("http://localhost:5000/api/notes/all")
 
                 const notes: Note[] = await response.json()
-                setNotes(notes)
+                const sortedNotes: Note[] = notes.sort((a,b) => a.title.localeCompare(b.title))
+                setNotes(sortedNotes)
             } catch (e) {
                 console.log(e)
             }
@@ -139,65 +140,57 @@ const App = () => {
     }
 
     return (
-        <div className="app-container">
-
-            {/*form*/}
-            <form
-                className="note-form"
-                onSubmit={(event) =>
-                    selectedNote ? handleUpdateNote(event) : handleAddNote(event)}>
-                <input
-                    value={title}
-                    onChange={(event) =>
-                        setTitle(event.target.value)}
-                    placeholder="title"
-                    required>
-                </input>
-                <textarea
-                    value={content}
-                    onChange={(event) =>
-                        setContent(event.target.value)}
-                    placeholder="content"
-                    rows={10}
-                    required>
+        <div className="app-schema">
+            <h1>Notes app</h1>
+            <div className="app-container">
+                <form
+                    className="note-form"
+                    onSubmit={(event) =>
+                        selectedNote ? handleUpdateNote(event) : handleAddNote(event)}>
+                    <input
+                        value={title}
+                        onChange={(event) =>
+                            setTitle(event.target.value)}
+                        placeholder="title"
+                        required>
+                    </input>
+                    <textarea
+                        value={content}
+                        onChange={(event) =>
+                            setContent(event.target.value)}
+                        placeholder="content"
+                        rows={10}
+                        required>
                 </textarea>
 
-                {selectedNote ? (
-                    <div className="edit-buttons">
-                        <button type="submit">Save</button>
-                        <button onClick={handleCancel}>
-                            Cancel
-                        </button>
-                    </div>
-                ) : (
-                    <button type="submit">
-                        Add Note
-                    </button>
-                )}
-            </form>
-
-            {/*all notes*/}
-            <div className="notes-grid">
-                {notes.map((note) => (
-                    <div className="note-item"
-                         onClick={() => handleNoteClick(note)}
-                    >
-                        <div className="notes-header">
-                            <button onClick={(event) => deleteNote(event, note._id)}>x</button>
+                    {selectedNote ? (
+                        <div className="edit-buttons">
+                            <button type="submit">Save</button>
+                            <button onClick={handleCancel}>
+                                Cancel
+                            </button>
                         </div>
-                        <h2>{note.title}</h2>
-                        <p>{note.content}</p>
-                    </div>
-                ))}
-                {/*<div className="note-item">
-                    <div className="notes-header">
-                        <button>
-                            x
+                    ) : (
+                        <button type="submit">
+                            Add Note
                         </button>
-                        <h2>Note Title</h2>
-                        <p>Note Content</p>
-                    </div>
-                </div>*/}
+                    )}
+                </form>
+
+                {/*all notes*/}
+                <div className="notes-grid">
+                    {notes.map((note) => (
+                        <div className="note-item"
+                             onClick={() => handleNoteClick(note)}
+                        >
+                            <div className="notes-header">
+                                <button onClick={(event) => deleteNote(event, note._id)}>x</button>
+                            </div>
+                            <h2>{note.title}</h2>
+                            <p>{note.content}</p>
+                        </div>
+                    ))}
+                </div>
             </div>
         </div>
     )
