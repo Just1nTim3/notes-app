@@ -5,6 +5,7 @@ type Note = {
     _id: number
     title: string
     content: string
+    updatedDate: Date
 }
 
 
@@ -14,6 +15,7 @@ const App = () => {
     //state variables
     const [title, setTitle] = useState("")
     const [content, setContent] = useState("")
+    const [date, setDate] = useState("")
 
     const [selectedNote, setSelectedNote] = useState<Note | null>(null)
 
@@ -24,8 +26,10 @@ const App = () => {
                 const response = await fetch("http://localhost:5000/api/notes/all")
 
                 const notes: Note[] = await response.json()
-                const sortedNotes: Note[] = notes.sort((a,b) => a.title.localeCompare(b.title))
-                setNotes(sortedNotes)
+                //const sortedNotes: Note[] = notes.sort((a,b) => a.title.localeCompare(b.title))
+                //const sortedNotes: Note[] = notes.sort((a,b) => a.updatedDate.toLocaleDateString(b.updatedDate))
+                //setNotes(sortedNotes)
+                setNotes(notes)
             } catch (e) {
                 console.log(e)
             }
@@ -39,15 +43,16 @@ const App = () => {
         setSelectedNote(note)
         setTitle(note.title)
         setContent(note.content)
+        setDate(new Date().toLocaleDateString)
     }
 
-    //FIXME: update crashes app
     const handleUpdateNote = async (event: React.FormEvent) => {
         event.preventDefault()
 
         if (!selectedNote) {
             return
         }
+        const date =  new Date()
         console.log(selectedNote._id)
 
         try {
@@ -60,7 +65,8 @@ const App = () => {
                     },
                     body: JSON.stringify({
                         title,
-                        content
+                        content,
+                        date
                     })
                 })
             const updatedNote = await response.json()
@@ -93,6 +99,7 @@ const App = () => {
         event.preventDefault()
         console.log("title: ", title)
         console.log("content: ", content)
+        const date = new Date()
 
         try {
             const response = await fetch(
@@ -104,7 +111,8 @@ const App = () => {
                     },
                     body: JSON.stringify({
                         title,
-                        content
+                        content,
+                        date
                     })
                 })
             const newNote = await response.json()
@@ -161,7 +169,7 @@ const App = () => {
                         placeholder="content"
                         rows={10}
                         required>
-                </textarea>
+                    </textarea>
 
                     {selectedNote ? (
                         <div className="edit-buttons">

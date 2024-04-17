@@ -70,6 +70,7 @@ app.post("/api/notes/:id", async (req, res) => {
             console.log("old note: " + note)
             note.title = req.body.title
             note.content = req.body.content
+            note.updatedDate = req.body.updatedDate
             console.log("new note: " + note)
 
             console.log("Saving note")
